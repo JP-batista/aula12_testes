@@ -1,4 +1,4 @@
-"use client"; // Necessário para usar hooks como useRouter
+"use client";
 
 import { useRouter } from 'next/navigation';
 
