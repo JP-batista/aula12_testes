@@ -5,7 +5,6 @@ export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
 
-    // LOG PARA DEBUG
     console.log('REQ BODY =>', { email, password });
 
     const { data, error } = await supabase
@@ -15,7 +14,6 @@ export async function POST(request: Request) {
       .eq('senha', password)
       .single();
 
-    // LOG PARA DEBUG
     console.log('SUPABASE RES =>', { data, error });
 
     if (!data || error) {
