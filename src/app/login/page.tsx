@@ -1,4 +1,4 @@
-"use client"; // Obrigatório para usar "useState" e "useRouter"
+"use client";
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -17,14 +17,18 @@ export default function LoginPage() {
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, senha }),
+        body: JSON.stringify({
+          email,
+          password: senha
+        }),
       });
+
+      const data = await response.json();
 
       if (response.ok) {
         router.push('/home');
       } else {
-        const data = await response.json();
-        setErro(data.erro || 'Erro ao fazer login');
+        setErro(data.message || 'Erro ao fazer login');
       }
     } catch (err) {
       setErro('Não foi possível conectar ao servidor');
@@ -34,50 +38,46 @@ export default function LoginPage() {
   const isButtonDisabled = !email || !senha;
 
   return (
-    // Fundo gradiente para claro e escuro
     <main className="flex min-h-screen flex-col items-center justify-center p-6 sm:p-24 bg-gradient-to-r from-gray-50 to-gray-200 dark:from-black dark:to-neutral-900">
-      <div className="bg-white dark:bg-neutral-900 border border-transparent dark:border-neutral-800 p-10 rounded-2xl shadow-2xl w-full max-w-sm transform hover:scale-[1.01] transition duration-300">
-        <h1 className="text-3xl font-extrabold mb-8 text-center text-gray-900 dark:text-gray-100">
+      <div className="bg-white dark:bg-neutral-900 border dark:border-neutral-800 p-10 rounded-2xl shadow-2xl w-full max-w-sm">
+        <h1 className="text-3xl font-extrabold mb-8 text-center">
           Bem-vindo! 🚀
         </h1>
+
         <form onSubmit={handleLogin} className="space-y-6">
+
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-              E-mail
-            </label>
+            <label className="block mb-1">E-mail</label>
             <input
+              name="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-4 py-3 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-gray-100 transition duration-150"
               required
-              placeholder="seu@email.com"
+              className="w-full p-2 rounded border"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
-              Senha
-            </label>
+            <label className="block mb-1">Senha</label>
             <input
+              name="password"
               type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
-              className="mt-1 block w-full px-4 py-3 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 dark:text-gray-100 transition duration-150"
               required
-              placeholder="••••••••"
+              className="w-full p-2 rounded border"
             />
           </div>
 
           {erro && (
-            <p className="text-sm text-red-600 dark:text-red-300 font-medium text-center bg-red-50 dark:bg-red-950 p-2 rounded-md border border-red-200 dark:border-red-800">
-              {erro}
-            </p>
+            <p className="text-red-600 text-center">{erro}</p>
           )}
 
           <button
             type="submit"
             disabled={isButtonDisabled}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-base font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 dark:disabled:bg-gray-700 dark:disabled:text-gray-400 transition duration-300 ease-in-out"
+            className="w-full p-3 rounded bg-indigo-600 text-white disabled:bg-gray-500"
           >
             Entrar
           </button>
